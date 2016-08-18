@@ -1,0 +1,709 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,multidex," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="MultiDex相关问题dex file :dalvik executable file
+为什么需要MultiDex用Dalvik虚拟机的Android手机，在安装app的时候，会有一个优化dex的过程，使用dexopt将dex优化的更加高效于运行存储为odex，但是dexopt把每个类的方法id检索的链表长度使用了short，4字节，所以无论如何，就导致了如果一个dex中的方法数（包含Andro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android-MultiDex">
+<meta property="og:url" content="http://yoursite.com/2016/08/17/android-MultiDex/index.html">
+<meta property="og:site_name" content="相信不可能">
+<meta property="og:description" content="MultiDex相关问题dex file :dalvik executable file
+为什么需要MultiDex用Dalvik虚拟机的Android手机，在安装app的时候，会有一个优化dex的过程，使用dexopt将dex优化的更加高效于运行存储为odex，但是dexopt把每个类的方法id检索的链表长度使用了short，4字节，所以无论如何，就导致了如果一个dex中的方法数（包含Andro">
+<meta property="og:updated_time" content="2016-08-17T02:07:16.869Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android-MultiDex">
+<meta name="twitter:description" content="MultiDex相关问题dex file :dalvik executable file
+为什么需要MultiDex用Dalvik虚拟机的Android手机，在安装app的时候，会有一个优化dex的过程，使用dexopt将dex优化的更加高效于运行存储为odex，但是dexopt把每个类的方法id检索的链表长度使用了short，4字节，所以无论如何，就导致了如果一个dex中的方法数（包含Andro">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/17/android-MultiDex/"/>
+
+  <title> android-MultiDex | 相信不可能 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">相信不可能</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Just do it.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                android-MultiDex
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-17T10:00:30+08:00" content="2016-08-17">
+              2016-08-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/17/android-MultiDex/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/android-MultiDex/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="MultiDex相关问题"><a href="#MultiDex相关问题" class="headerlink" title="MultiDex相关问题"></a>MultiDex相关问题</h1><p>dex file :dalvik executable file</p>
+<h2 id="为什么需要MultiDex"><a href="#为什么需要MultiDex" class="headerlink" title="为什么需要MultiDex"></a>为什么需要MultiDex</h2><p>用Dalvik虚拟机的Android手机，在安装app的时候，会有一个优化dex的过程，使用dexopt将dex优化的更加高效于运行存储为odex，但是dexopt把每个类的方法id检索的链表长度使用了short，4字节，所以无论如何，就导致了如果<strong>一个dex</strong>中的方法数（包含Android framework methods, library methods, and methods in your own code）不能超过65535。因此当我们项目中的方法书超过65535时就会报错：
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">早期版本报错如下：</div><div class="line">Conversion <span class="keyword">to</span> Dalvik format failed:</div><div class="line">Unable <span class="keyword">to</span> execute dex: <span class="function"><span class="keyword">method</span> <span class="title">ID</span> <span class="title">not</span> <span class="title">in</span> [0, 0<span class="title">xffff</span>]:</span> <span class="number">65536</span></div><div class="line"></div><div class="line">最近的版本报错如下：</div><div class="line">trouble writing output:</div><div class="line">Too many field references: <span class="number">131000</span>; max <span class="keyword">is</span> <span class="number">65536</span>.</div><div class="line">You may <span class="keyword">try</span> <span class="keyword">using</span> --multi-dex option.</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这个限制通常被叫做：64k preference limit。在dexopt对dex优化时，会将dex中的方法存储在一个叫做LinearAlloc的缓冲区中，LinearAlloc缓冲区在不同版本的android手机上大小是不一样的，2.2、2.3仅有5M，android4.x提升到了8M或16M，所以当方法数过多时，dexopt就会奔溃导致程序异常终止。</p>
+</blockquote>
+<p>在android5.0之前，dalvik规定每一个apk只能包含一个dex文件，所以为了摆脱这个限制，你必须使用Google官方提供的MutiDex support library。当project编译完毕之后，MultiDex lib就会加载到primary dex中的文件，这样就可以管理其他dex的加载。</p>
+<blockquote>
+<p>注意：如果你的工程要支持api20及以下，那么必须禁用android studio的instant run。</p>
+</blockquote>
+<p>在android50及以后，开始使用了art环境取代Dalvik，而art架构本身支持多dex文件的加载。在安装apk时，art会在扫描class(1…n).dex时进行预编译，将其打包成一个单独的.oat文件，在apk运行的时候就从这个单独的oat文件读取资源。</p>
+<blockquote>
+<p>注意：如果你的minSdkVersion大于等于21，且你开启了instant run，那么android studio则会自动配置multidex。因为instant run仅在debug时起作用，那么在发布debug版时，你必须自己去配置multidex来突破64k限制。</p>
+</blockquote>
+<h2 id="避免64k限制"><a href="#避免64k限制" class="headerlink" title="避免64k限制"></a>避免64k限制</h2><p>尽管已经有一些办法去解决64k限制了，但我们应当尽量去避免方法数超过64k，因为multidex的支持有很多限制：</p>
+<blockquote>
+<ul>
+<li>如果第二个dex文件过大可能会导致应用ANR或crash。</li>
+<li>在android4.0及以下，因为linearAlloc的bug，可能导致multidex不启用。</li>
+<li>因为Dalvik LinearAlloc的限制，multidex可能会导致很大的内存分配，从而crash。在android4.0及以前，有很大的几率会发生crash，在android5.0之前的版本也有一定的几率会发生crash</li>
+<li></li>
+</ul>
+</blockquote>
+<p>谷歌提供了两种方法来解决这个问题：</p>
+<ol>
+<li>Review your app’s direct and transitive dependencies（然并卵）</li>
+<li>Remove unused code with ProGuard<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="params">...</span></div><div class="line">android &#123;</div><div class="line"></div><div class="line">    <span class="params">...</span></div><div class="line">    defaultConfig &#123;</div><div class="line">        <span class="params">...</span></div><div class="line">        <span class="comment">// Enabling multidex support.</span></div><div class="line">        multiDexEnabled <span class="literal">true</span></div><div class="line">        <span class="comment">//移除无用的resource文件</span></div><div class="line">        shrinkResources <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">    <span class="params">...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="配置Multidex"><a href="#配置Multidex" class="headerlink" title="配置Multidex"></a>配置Multidex</h2><p>有时我们无论怎么努力，因为某些第三方库的原因无可避免的达到了64k，那么我们就要学会怎么去配置multidex。在Android SDK Build Tools 21.1 及以上，开始支持在build.gradle中配置multidex，所以首先我们必须将sdk更新到21.1以上,然后按照以下步骤来操作。</p>
+<p>1 修改主module的build.gradle文件
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">android &#123;</div><div class="line">    compileSdkVersion <span class="number">21</span></div><div class="line">    buildToolsVersion <span class="string">"21.1.0"</span></div><div class="line"></div><div class="line">    defaultConfig &#123;</div><div class="line">        <span class="params">...</span></div><div class="line">        minSdkVersion <span class="number">14</span></div><div class="line">        targetSdkVersion <span class="number">21</span></div><div class="line">        <span class="params">...</span></div><div class="line"></div><div class="line">        <span class="comment">// Enabling multidex support.</span></div><div class="line">        multiDexEnabled <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">    <span class="params">...</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">dependencies &#123;</div><div class="line">  <span class="comment">//在sdk大于等于23时，则不需要了</span></div><div class="line">  compile <span class="string">'com.android.support:multidex:1.0.0'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>2 继承或绑定MultiDexApplicaiton
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">//方法1</span></div><div class="line">public <span class="class"><span class="keyword">class</span>  <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">MultiDexApplication</span></span></div></pre></td></tr></table></figure></p>
+<p>如果MyApplication已经集成了其他Application，那么则只需要重写Application的attachBaseContext() 方法即可。
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span>  <span class="title">MyApplication</span> <span class="keyword">extends</span> <span class="title">OtherApplication</span></span>&#123;</div><div class="line"></div><div class="line">    ...</div><div class="line">    <span class="keyword">protected</span> void attachBaseContext(<span class="type">Context</span> base) &#123;</div><div class="line">        <span class="keyword">super</span>.attachBaseContext(base);</div><div class="line">        <span class="type">MultiDex</span>.install(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="优化Multidex"><a href="#优化Multidex" class="headerlink" title="优化Multidex"></a>优化Multidex</h2><p>multidex会带来很大的性能问题，因为它需要在运行时抉择把哪些文件加载到primary dex中,哪些文件加载到second dex中，这当然要比直接执行更加耗时。为了缓解该性能问题，谷歌提供了一种方案：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">android &#123;</div><div class="line">    productFlavors &#123;</div><div class="line">        <span class="comment">// Define separate dev and prod product flavors.</span></div><div class="line">        dev &#123;</div><div class="line">            <span class="comment">// dev utilizes minSDKVersion = 21 to allow the Android gradle plugin</span></div><div class="line">            <span class="comment">// to pre-dex each module and produce an APK that can be tested on</span></div><div class="line">            <span class="comment">// Android Lollipop without time consuming dex merging processes.</span></div><div class="line">            minSdkVersion <span class="number">21</span></div><div class="line">        &#125;</div><div class="line">        prod &#123;</div><div class="line">            <span class="comment">// The actual minSdkVersion for the application.</span></div><div class="line">            minSdkVersion <span class="number">14</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">          ...</div><div class="line">    buildTypes &#123;</div><div class="line">        release &#123;</div><div class="line">            runProguard <span class="keyword">true</span></div><div class="line">            proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>),</div><div class="line">                                                 <span class="string">'proguard-rules.pro'</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">  <span class="keyword">compile</span> <span class="string">'com.android.support:multidex:1.0.0'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>After you have completed this configuration change, you can use the devDebug variant of your app, which combines the attributes of the dev productFlavor and the debug buildType. Using this target creates a debug app with proguard disabled, multidex enabled, and minSdkVersion set to Android API level 21. These settings cause the Android gradle plugin to do the following:</p>
+<p>Build each module of the application (including dependencies) as separate dex files. This is commonly referred to as pre-dexing.
+Include each dex file in the APK without modification.
+Most importantly, the module dex files will not be combined, and so the long-running calculation to determine the contents of the primary dex file is avoided.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag">#android</a>
+          
+            <a href="/tags/multidex/" rel="tag">#multidex</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/17/android-序列化对单例模式的破坏/" rel="next" title="androdid-序列化对单例模式的破坏">
+                <i class="fa fa-chevron-left"></i> androdid-序列化对单例模式的破坏
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/17/Java-四种引用/" rel="prev" title="Java-四种引用">
+                Java-四种引用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/17/android-MultiDex/"
+           data-title="android-MultiDex" data-url="http://yoursite.com/2016/08/17/android-MultiDex/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="codempror" />
+          <p class="site-author-name" itemprop="name">codempror</p>
+          <p class="site-description motion-element" itemprop="description">Just do it.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MultiDex相关问题"><span class="nav-number">1.</span> <span class="nav-text">MultiDex相关问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要MultiDex"><span class="nav-number">1.1.</span> <span class="nav-text">为什么需要MultiDex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#避免64k限制"><span class="nav-number">1.2.</span> <span class="nav-text">避免64k限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置Multidex"><span class="nav-number">1.3.</span> <span class="nav-text">配置Multidex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化Multidex"><span class="nav-number">1.4.</span> <span class="nav-text">优化Multidex</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">codempror</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+本站总访问量 <span id="busuanzi_value_site_pv"></span> &nbsp&nbsp&nbsp</span></a>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhiho"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
